@@ -193,10 +193,13 @@ searchButton.addEventListener("click", async function () {
 ${item.tariff_date ? `<small>Tarife tarihi: ${item.tariff_date}</small>` : ""}
         `).join("")}
       </div>
-      <p class="source-note">
-        Kaynak: ${data.source} · Bölgesel yayımlanan fiyatlar.
-        İstasyon pompa fiyatı garantisi değildir.
-      </p>
+    <p class="source-note">
+  Kaynak: ${data.source} · ${
+    selectedCategory === "elektrik"
+      ? "Halka açık DC şarj operatörlerinin tarifeleridir. Fiyatlar istasyon, soket gücü ve üyelik koşullarına göre değişebilir."
+      : "Bölgesel yayımlanan akaryakıt fiyatlarıdır. İstasyon pompa fiyatı garantisi değildir."
+  }
+</p>
     `;
 
   } catch (error) {
