@@ -267,20 +267,31 @@ if (selectedCategory === "elektrik") {
   const cityCode = cityIds[city];
   const districtId = districtSelect.value;
 
-  const stationParams = new URLSearchParams({
-    city: String(cityCode)
-  });
+ const cityCode = cityIds[city];
+const districtId = districtSelect.value;
 
-  if (districtId) {
-    stationParams.set("district", districtId);
-  }
+console.log("Şehir:", city, "Kod:", cityCode);
+console.log("İlçe:", districtSelect.options[districtSelect.selectedIndex]?.text);
+console.log("İlçe ID:", districtId);
 
-  const stationResponse = await fetch(
-    "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
-    stationParams.toString()
-  );
+const stationParams = new URLSearchParams();
+stationParams.set("city", String(cityCode));
 
-  const stationData = await stationResponse.json();
+if (districtId !== "") {
+  stationParams.set("district", String(districtId));
+}
+
+console.log("Gönderilen API adresi:",
+  "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
+  stationParams.toString()
+);
+
+const stationResponse = await fetch(
+  "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
+  stationParams.toString()
+);
+
+const stationData = await stationResponse.json();
 
   if (!stationResponse.ok || !stationData.success) {
     throw new Error("Şarj istasyonları alınamadı.");
