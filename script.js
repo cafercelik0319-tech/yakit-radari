@@ -7,6 +7,7 @@ const brandSelect = document.getElementById("brandSelect");
 const sortSelect = document.getElementById("sortSelect");
 
 let selectedCategory = "benzin";
+let chargingMap = null;
 
 // Şehir ve ilçe altyapısı
 const districts = {
@@ -299,13 +300,81 @@ if (selectedCategory === "elektrik") {
   `).join("");
 
   results.insertAdjacentHTML("beforeend", `
-    <div class="station-results">
-      <h3>Şarj İstasyonları (${stationData.count})</h3>
-      <div class="price-results-grid">
-        ${stationHtml || "<p>Bu ilçede istasyon bulunamadı.</p>"}
-      </div>
+  <div class="station-results">
+    <h3>Şarj İstasyonları (${stationData.count})</h3>
+
+    <div
+      id="chargingMap"
+      style="width:100%; height:420px; border-radius:14px; margin:16px 0;"
+    ></div>
+
+    <div class="price-results-grid">
+      ${stationHtml || "<p>Bu ilçede istasyon bulunamadı.</p>"}
     </div>
-  `);
+  </div>
+`);
+  // Önceki haritayı temizle
+if (chargingMap) {
+  chargingMap.remove();
+  chargingMap = null;
+}
+
+const validStations = stationData.stations.filter(station => {
+  const lat = Number(station.latitude);
+  const lng = Number(station.longitude);
+
+  return (
+    Number.isFinite(lat) &&
+    Number.isFinite(lng) &&
+    lat >= -90 && lat <= 90 &&
+    lng >= -180 && lng <= 180 &&
+    station.latitude !== null &&
+    station.longitude !== null &&
+    station.latitude !== "" &&
+    station.longitude !== ""
+  );
+});
+
+const mapElement = document.getElementById("chargingMap");
+
+if (validStations.length > 0 && window.L && mapElement) {
+  chargingMap = L.map("chargingMap");
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "&copy; OpenStreetMap katkıda bulunanlar"
+  }).addTo(chargingMap);
+
+  const bounds = [];
+
+  validStations.forEach(station => {
+    const lat = Number(station.latitude);
+    const lng = Number(station.longitude);
+
+    const marker = L.marker([lat, lng]).addTo(chargingMap);
+
+    const popup = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = station.station_name || station.operator || "Şarj istasyonu";
+
+    const brand = document.createElement("p");
+    brand.textContent = station.brand || station.operator || "";
+
+    const power = document.createElement("p");
+    power.textContent = "DC güç: " + (station.dc_power_summary || "Belirtilmemiş");
+
+    popup.append(title, brand, power);
+    marker.bindPopup(popup);
+
+    bounds.push([lat, lng]);
+  });
+
+  chargingMap.fitBounds(bounds, { padding: [30, 30] });
+
+  setTimeout(() => chargingMap.invalidateSize(), 100);
+} else if (mapElement) {
+  mapElement.innerHTML =
+    '<p style="padding:20px;">Bu istasyonlar için harita koordinatı bulunamadı.</p>';
+}
 }
 
   } catch (error) {
