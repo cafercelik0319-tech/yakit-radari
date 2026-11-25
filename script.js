@@ -232,3 +232,21 @@ sortSelect.addEventListener("change", function () {
 
 console.log("Yakıt Radarı hazır.");
 console.log("Seçili kategori:", selectedCategory);
+
+async function getChargingDistrictId(cityId, districtName) {
+  const response = await fetch(
+    "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?city=" + cityId
+  );
+
+  const data = await response.json();
+
+  if (!data.success) {
+    throw new Error("İstasyon verileri alınamadı.");
+  }
+
+  const station = data.stations.find(
+    item => item.district === districtName
+  );
+
+  return station ? station.district_id : null;
+}
