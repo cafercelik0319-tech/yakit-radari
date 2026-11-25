@@ -50,7 +50,14 @@ const districts = {
     "Seydikemer"
   ]
 };
-
+const cityIds = {
+  "İstanbul": 34,
+  "Ankara": 6,
+  "İzmir": 35,
+  "Bursa": 16,
+  "Antalya": 7,
+  "Muğla": 48
+};
 // Şehir değiştiğinde ilçeleri getir
 citySelect.addEventListener("change", function () {
   const city = this.value;
