@@ -221,32 +221,33 @@ ${item.tariff_date ? `<small>Tarife tarihi: ${item.tariff_date}</small>` : ""}
 });
 
 
-// Sıralama ve marka filtreleri
+// Marka değişince fiyatları yeniden getir
 brandSelect.addEventListener("change", function () {
-  console.log("Marka filtresi:", this.value);
+  if (citySelect.value) {
+    searchButton.click();
+  }
 });
 
+// Sıralama değişince fiyatları yeniden sırala
 sortSelect.addEventListener("change", function () {
-  console.log("Fiyat sıralaması:", this.value);
+  if (citySelect.value) {
+    searchButton.click();
+  }
 });
 
 console.log("Yakıt Radarı hazır.");
 console.log("Seçili kategori:", selectedCategory);
 
-async function getChargingDistrictId(cityId, districtName) {
+async function getChargingDistricts(cityId) {
   const response = await fetch(
-    "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?city=" + cityId
+    `https://yakit-radari-api.cafercelik0319.workers.dev/api/districts?city=${cityId}`
   );
 
   const data = await response.json();
 
-  if (!data.success) {
-    throw new Error("İstasyon verileri alınamadı.");
+  if (!response.ok || !data.success) {
+    throw new Error("İlçe bilgileri alınamadı.");
   }
 
-  const station = data.stations.find(
-    item => item.district === districtName
-  );
-
-  return station ? station.district_id : null;
+  return data.districts;
 }
