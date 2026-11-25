@@ -181,7 +181,7 @@ searchButton.addEventListener("click", async function () {
               <strong>${item.brand}</strong>
               <span>${item.region}</span>
             </div>
-            <h3>${item.category.toLocaleUpperCase("tr-TR")}</h3>
+            <h3>${item.category === "elektrik" ? "HIZLI ŞARJ (DC)" : item.category.toLocaleUpperCase("tr-TR")}</h3>
            <div class="price-value">
   ${item.display_price || Number(item.price).toLocaleString("tr-TR", {
     minimumFractionDigits: 2,
