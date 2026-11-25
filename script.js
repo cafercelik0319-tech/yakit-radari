@@ -58,27 +58,43 @@ const cityIds = {
   "Antalya": 7,
   "Muğla": 48
 };
-// Şehir değiştiğinde ilçeleri getir
-citySelect.addEventListener("change", function () {
+// Şehir değiştiğinde ilçeleri D1 veritabanından getir
+citySelect.addEventListener("change", async function () {
   const city = this.value;
+  const cityCode = cityIds[city];
 
-  districtSelect.innerHTML = '<option value="">Tüm ilçeler</option>';
+  districtSelect.innerHTML =
+    '<option value="">İlçeler yükleniyor...</option>';
+  districtSelect.disabled = true;
 
-  if (districts[city]) {
-    districts[city].forEach(district => {
+  if (!city || !cityCode) {
+    districtSelect.innerHTML =
+      '<option value="">Önce şehir seçiniz</option>';
+    districtSelect.disabled = false;
+    return;
+  }
+
+  try {
+    const districts = await getChargingDistricts(cityCode);
+
+    districtSelect.innerHTML =
+      '<option value="">Tüm ilçeler</option>';
+
+    districts.forEach(district => {
       const option = document.createElement("option");
-      option.value = district;
-      option.textContent = district;
+      option.value = district.id;
+      option.textContent = district.name;
       districtSelect.appendChild(option);
     });
-  }
 
-  if (city) {
-    document.querySelector(".empty-state h3").textContent =
-      city + " fiyatları için veri bekleniyor";
+  } catch (error) {
+    districtSelect.innerHTML =
+      '<option value="">İlçeler alınamadı</option>';
+    console.error("İlçe yükleme hatası:", error);
+  } finally {
+    districtSelect.disabled = false;
   }
 });
-
 // Kategori seçimi
 
 categoryCards.forEach(card => {
