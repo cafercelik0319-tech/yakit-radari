@@ -86,7 +86,7 @@ categoryCards.forEach(card => {
       benzin: "Benzin",
       motorin: "Motorin",
       lpg: "LPG",
-      elektrik: "Elektrik"
+      elektrik: "Hızlı Şarj"
     };
 
     document.querySelector("#karsilastir .section-heading h2").textContent =
@@ -182,15 +182,15 @@ searchButton.addEventListener("click", async function () {
               <span>${item.region}</span>
             </div>
             <h3>${item.category.toLocaleUpperCase("tr-TR")}</h3>
-            <div class="price-value">
-              ${Number(item.price).toLocaleString("tr-TR", {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-              })}
-              <small>₺ / ${item.unit.replace("TL/", "")}</small>
-            </div>
-            <p>${item.city} · KDV dahil</p>
-          </div>
+           <div class="price-value">
+  ${item.display_price || Number(item.price).toLocaleString("tr-TR", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  })}
+  <small>₺ / ${item.unit.replace("TL/", "")}</small>
+</div>
+<p>${item.city} · KDV dahil</p>
+${item.tariff_date ? `<small>Tarife tarihi: ${item.tariff_date}</small>` : ""}
         `).join("")}
       </div>
       <p class="source-note">
