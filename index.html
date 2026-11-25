@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Yakıt Radarı ile benzin, motorin, LPG ve elektrik fiyatlarını şehir ve istasyon bazında karşılaştırın.">
+  <meta name="theme-color" content="#138A52">
+  <title>Yakıt Radarı | En Uygun Fiyatı Bul</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="header">
+  <div class="container nav">
+    <a href="index.html" class="logo">
+      <span class="logo-icon">◉</span>
+      YAKIT <strong>RADARI</strong>
+    </a>
+    <nav>
+      <a href="#kategoriler">Kategoriler</a>
+      <a href="#karsilastir">Fiyat Karşılaştır</a>
+      <a href="#hakkinda">Hakkımızda</a>
+    </nav>
+    <a href="#karsilastir" class="nav-button">Fiyatları İncele</a>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="container hero-content">
+      <span class="eyebrow">TÜRKİYE'NİN ENERJİ FİYAT RADARI</span>
+      <h1>En uygun fiyatı bul.<br><span>Tasarruf etmeye başla.</span></h1>
+      <p>Benzin, motorin, LPG ve elektrik fiyatlarını karşılaştır. Sana en uygun seçeneği keşfet.</p>
+
+      <div class="location-box">
+        <label for="citySelect">Şehir seç</label>
+        <select id="citySelect">
+          <option value="">Şehir seçiniz</option>
+          <option>İstanbul</option>
+          <option>Ankara</option>
+          <option>İzmir</option>
+          <option>Bursa</option>
+          <option>Antalya</option>
+          <option>Muğla</option>
+        </select>
+        <button id="searchButton">Fiyatları Göster →</button>
+      </div>
+
+      <div class="hero-note">✓ Şehir bazında karşılaştırma · ✓ Güncel veri odaklı</div>
+    </div>
+  </section>
+
+  <section class="container categories" id="kategoriler">
+    <div class="section-heading">
+      <span class="eyebrow">KATEGORİLER</span>
+      <h2>Hangi fiyatı karşılaştırmak istiyorsun?</h2>
+    </div>
+
+    <div class="category-grid">
+      <button class="category-card active" data-category="benzin">
+        <span class="category-icon">⛽</span>
+        <strong>Benzin</strong>
+        <small>Benzin fiyatları</small>
+      </button>
+      <button class="category-card" data-category="motorin">
+        <span class="category-icon">🚛</span>
+        <strong>Motorin</strong>
+        <small>Dizel fiyatları</small>
+      </button>
+      <button class="category-card" data-category="lpg">
+        <span class="category-icon">🔥</span>
+        <strong>LPG</strong>
+        <small>Otogaz fiyatları</small>
+      </button>
+      <button class="category-card" data-category="elektrik">
+        <span class="category-icon">⚡</span>
+        <strong>Elektrik</strong>
+        <small>Elektrik ve şarj</small>
+      </button>
+    </div>
+  </section>
+
+  <section class="comparison-section" id="karsilastir">
+    <div class="container">
+      <div class="section-heading">
+        <span class="eyebrow">FİYAT KARŞILAŞTIRMA</span>
+        <h2>En uygun fiyatları keşfet</h2>
+        <p>Seçtiğin şehirdeki fiyatları tek ekranda karşılaştır.</p>
+      </div>
+
+      <div class="filter-bar">
+        <select id="districtSelect">
+          <option value="">Önce şehir seçiniz</option>
+        </select>
+        <select id="brandSelect">
+          <option value="">Tüm markalar</option>
+          <option>Shell</option>
+          <option>Opet</option>
+          <option>Petrol Ofisi</option>
+          <option>TotalEnergies</option>
+        </select>
+        <select id="sortSelect">
+          <option value="asc">En düşük fiyat</option>
+          <option value="desc">En yüksek fiyat</option>
+        </select>
+      </div>
+
+      <div class="empty-state">
+        <span>📡</span>
+        <h3>Fiyat verileri hazırlanıyor</h3>
+        <p>Gerçek istasyon ve fiyat bağlantıları tamamlandığında karşılaştırmalar burada yayınlanacak.</p>
+        <small>Henüz doğrulanmış fiyat verisi bulunmuyor.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="container info-section" id="hakkinda">
+    <div>
+      <span class="eyebrow">YAKIT RADARI</span>
+      <h2>Fiyatları takip etmek artık daha kolay.</h2>
+      <p>Amacımız, enerji ve akaryakıt fiyatlarını şeffaf biçimde karşılaştırabileceğin kullanışlı bir platform sunmak.</p>
+    </div>
+    <div class="info-points">
+      <div>✓ Şehir bazında fiyat takibi</div>
+      <div>✓ Marka ve istasyon karşılaştırması</div>
+      <div>✓ Fiyat geçmişi ve değişim grafikleri</div>
+      <div>✓ Elektrik ve şarj tarifeleri</div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="container footer-inner">
+    <strong>YAKIT RADARI</strong>
+    <span>En uygun fiyatı bul. Tasarruf et.</span>
+    <small>© 2026 Yakıt Radarı. Tüm hakları saklıdır.</small>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
