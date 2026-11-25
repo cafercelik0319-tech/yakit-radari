@@ -262,35 +262,27 @@ ${item.tariff_date ? `<small>Tarife tarihi: ${item.tariff_date}</small>` : ""}
   }
 </p>
     `;
-    // Elektrik kategorisinde gerçek şarj istasyonlarını getir
+// Elektrik kategorisinde gerçek şarj istasyonlarını getir
 if (selectedCategory === "elektrik") {
+
   const cityCode = cityIds[city];
   const districtId = districtSelect.value;
 
- const cityCode = cityIds[city];
-const districtId = districtSelect.value;
+  console.log("Şehir:", city, "Kod:", cityCode);
+  console.log("İlçe:", districtSelect.options[districtSelect.selectedIndex]?.text);
+  console.log("İlçe ID:", districtId);
 
-console.log("Şehir:", city, "Kod:", cityCode);
-console.log("İlçe:", districtSelect.options[districtSelect.selectedIndex]?.text);
-console.log("İlçe ID:", districtId);
+  const stationParams = new URLSearchParams();
+  stationParams.set("city", String(cityCode));
 
-const stationParams = new URLSearchParams();
-stationParams.set("city", String(cityCode));
+  if (districtId) {
+    stationParams.set("district", String(districtId));
+  }
 
-if (districtId !== "") {
-  stationParams.set("district", String(districtId));
-}
-
-console.log("Gönderilen API adresi:",
-  "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
-  stationParams.toString()
-);
-
-const stationResponse = await fetch(
-  "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
-  stationParams.toString()
-);
-
+  const stationResponse = await fetch(
+    "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
+    stationParams.toString()
+  );
 const stationData = await stationResponse.json();
 
   if (!stationResponse.ok || !stationData.success) {
