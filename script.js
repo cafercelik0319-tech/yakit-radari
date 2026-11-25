@@ -224,6 +224,52 @@ ${item.tariff_date ? `<small>Tarife tarihi: ${item.tariff_date}</small>` : ""}
   }
 </p>
     `;
+    // Elektrik kategorisinde gerçek şarj istasyonlarını getir
+if (selectedCategory === "elektrik") {
+  const cityCode = cityIds[city];
+  const districtId = districtSelect.value;
+
+  const stationParams = new URLSearchParams({
+    city: String(cityCode)
+  });
+
+  if (districtId) {
+    stationParams.set("district", districtId);
+  }
+
+  const stationResponse = await fetch(
+    "https://yakit-radari-api.cafercelik0319.workers.dev/api/charging-stations?" +
+    stationParams.toString()
+  );
+
+  const stationData = await stationResponse.json();
+
+  if (!stationResponse.ok || !stationData.success) {
+    throw new Error("Şarj istasyonları alınamadı.");
+  }
+
+  const stationHtml = stationData.stations.map(station => `
+    <div class="price-card">
+      <div class="price-card-top">
+        <strong>${station.station_name || station.operator}</strong>
+        <span>${station.district}</span>
+      </div>
+      <h3>${station.brand || station.operator}</h3>
+      <p>${station.address || "Adres bilgisi bulunmuyor"}</p>
+      <p>DC soket sayısı: ${station.dc_socket_count || 0}</p>
+      <p>DC güç: ${station.dc_power_summary || "Belirtilmemiş"}</p>
+    </div>
+  `).join("");
+
+  results.insertAdjacentHTML("beforeend", `
+    <div class="station-results">
+      <h3>Şarj İstasyonları (${stationData.count})</h3>
+      <div class="price-results-grid">
+        ${stationHtml || "<p>Bu ilçede istasyon bulunamadı.</p>"}
+      </div>
+    </div>
+  `);
+}
 
   } catch (error) {
     results.innerHTML = `
