@@ -97,8 +97,12 @@ categoryCards.forEach(card => {
 });
 
 // Fiyatları göster butonu
-searchButton.addEventListener("click", function () {
+
+// Fiyatları API'den çek ve göster
+searchButton.addEventListener("click", async function () {
   const city = citySelect.value;
+  const district = districtSelect.value;
+  const brand = brandSelect.value;
 
   if (!city) {
     alert("Lütfen önce bir şehir seçiniz.");
@@ -109,9 +113,92 @@ searchButton.addEventListener("click", function () {
     behavior: "smooth"
   });
 
-  document.querySelector(".empty-state h3").textContent =
-    city + " için doğrulanmış fiyat verisi bekleniyor";
+  const results = document.getElementById("priceResults");
+
+  results.innerHTML = `
+    <div class="empty-state">
+      <span>⏳</span>
+      <h3>Fiyatlar getiriliyor...</h3>
+      <p>Güncel kaynak kontrol ediliyor.</p>
+    </div>
+  `;
+
+  try {
+    const params = new URLSearchParams({
+      city: city,
+      category: selectedCategory
+    });
+
+    if (district) params.set("district", district);
+    if (brand) params.set("brand", brand);
+
+    const apiUrl =
+      "https://yakit-radari-api.cafercelik0319.workers.dev/api/prices?" +
+      params.toString();
+
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || "Fiyatlar alınamadı.");
+    }
+
+    if (!data.prices || data.prices.length === 0) {
+      results.innerHTML = `
+        <div class="empty-state">
+          <span>📡</span>
+          <h3>Henüz fiyat verisi bulunmuyor</h3>
+          <p>${data.message || "Bu seçim için doğrulanmış fiyat kaynağı bağlı değil."}</p>
+        </div>
+      `;
+      return;
+    }
+
+    let prices = [...data.prices];
+
+    if (sortSelect.value === "desc") {
+      prices.sort((a, b) => b.price - a.price);
+    } else {
+      prices.sort((a, b) => a.price - b.price);
+    }
+
+    results.innerHTML = `
+      <div class="price-results-grid">
+        ${prices.map(item => `
+          <div class="price-card">
+            <div class="price-card-top">
+              <strong>${item.brand}</strong>
+              <span>${item.region}</span>
+            </div>
+            <h3>${item.category.toLocaleUpperCase("tr-TR")}</h3>
+            <div class="price-value">
+              ${Number(item.price).toLocaleString("tr-TR", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+              })}
+              <small>₺ / ${item.unit.replace("TL/", "")}</small>
+            </div>
+            <p>${item.city} · KDV dahil</p>
+          </div>
+        `).join("")}
+      </div>
+      <p class="source-note">
+        Kaynak: ${data.source} · Bölgesel yayımlanan fiyatlar.
+        İstasyon pompa fiyatı garantisi değildir.
+      </p>
+    `;
+
+  } catch (error) {
+    results.innerHTML = `
+      <div class="empty-state">
+        <span>⚠️</span>
+        <h3>Fiyatlar alınamadı</h3>
+        <p>${error.message}</p>
+      </div>
+    `;
+  }
 });
+
 
 // Sıralama ve marka filtreleri
 brandSelect.addEventListener("change", function () {
