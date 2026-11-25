@@ -73,6 +73,7 @@ citySelect.addEventListener("change", function () {
 });
 
 // Kategori seçimi
+
 categoryCards.forEach(card => {
   card.addEventListener("click", function () {
     categoryCards.forEach(item => item.classList.remove("active"));
@@ -91,10 +92,20 @@ categoryCards.forEach(card => {
     document.querySelector("#karsilastir .section-heading h2").textContent =
       names[selectedCategory] + " fiyatlarını karşılaştır";
 
-    document.querySelector(".empty-state h3").textContent =
-      names[selectedCategory] + " fiyat verileri hazırlanıyor";
+    if (citySelect.value) {
+      searchButton.click();
+    } else {
+      document.getElementById("priceResults").innerHTML = `
+        <div class="empty-state">
+          <span>📡</span>
+          <h3>${names[selectedCategory]} fiyatlarını görmek için şehir seçiniz</h3>
+          <p>Önce bir şehir seçip fiyatları karşılaştırınız.</p>
+        </div>
+      `;
+    }
   });
 });
+
 
 // Fiyatları göster butonu
 
