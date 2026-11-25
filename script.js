@@ -50,14 +50,51 @@ const districts = {
     "Seydikemer"
   ]
 };
-const cityIds = {
-  "İstanbul": 34,
-  "Ankara": 6,
-  "İzmir": 35,
-  "Bursa": 16,
-  "Antalya": 7,
-  "Muğla": 48
-};
+const cityIds = {};
+
+// 81 ili API'den otomatik yükle
+async function loadCities() {
+  citySelect.disabled = true;
+  citySelect.innerHTML =
+    '<option value="">Şehirler yükleniyor...</option>';
+
+  try {
+    const response = await fetch(
+      "https://yakit-radari-api.cafercelik0319.workers.dev/api/cities"
+    );
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error("Şehirler alınamadı.");
+    }
+
+    citySelect.innerHTML =
+      '<option value="">Şehir seçiniz</option>';
+
+    data.cities.forEach(city => {
+      cityIds[city.name] = city.plate_code;
+
+      const option = document.createElement("option");
+      option.value = city.name;
+      option.textContent = city.name;
+
+      citySelect.appendChild(option);
+    });
+
+    console.log("Yüklenen şehir sayısı:", data.count);
+
+  } catch (error) {
+    citySelect.innerHTML =
+      '<option value="">Şehirler yüklenemedi</option>';
+
+    console.error(error);
+  } finally {
+    citySelect.disabled = false;
+  }
+}
+
+loadCities();
 // Şehir değiştiğinde ilçeleri D1 veritabanından getir
 citySelect.addEventListener("change", async function () {
   const city = this.value;
